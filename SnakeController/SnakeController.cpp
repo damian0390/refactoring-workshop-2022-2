@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <sstream>
+#include <typeinfo>
 
 #include "EventT.hpp"
 #include "IPort.hpp"
@@ -216,7 +217,10 @@ Controller::Segment Controller::getNewHead() const
 void Controller::receive(std::unique_ptr<Event> e)
 {
     try {
-        handleTimePassed(*dynamic_cast<EventT<TimeoutInd> const&>(*e));
+        if (e.getMessageId() == EventT<TimeoutInd> const&){
+            return;
+        }
+       // handleTimePassed(*dynamic_cast<EventT<TimeoutInd> const&>(*e));
     } catch (std::bad_cast&) {
         try {
             handleDirectionChange(*dynamic_cast<EventT<DirectionInd> const&>(*e));
